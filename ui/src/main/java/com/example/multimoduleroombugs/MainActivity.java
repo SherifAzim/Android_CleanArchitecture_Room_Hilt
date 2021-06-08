@@ -6,21 +6,12 @@ import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.domain.UserModel;
-import com.example.domain.repos.UserRepo;
-
-import org.reactivestreams.Subscription;
-
-import javax.inject.Inject;
+import com.example.domain.models.UserModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.FlowableSubscriber;
 import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
@@ -36,9 +27,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-       // UserRepo userRepo = new UserRepo(getApplicationContext());
+
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        mainViewModel.insertUser(new UserModel("magdy", 3));
+
+         mainViewModel.insertUser(new UserModel("fawzy", 45));
+
+        mainViewModel.getUserById(1)
+                .subscribe(new SingleObserver<UserModel>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(@NonNull UserModel userModel) {
+                        Log.d(TAG, "onCreate: User (1) = " + userModel.getName() +", "+ userModel.getAge());
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
 
     }
 }
